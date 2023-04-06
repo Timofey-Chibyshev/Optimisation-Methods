@@ -3,7 +3,6 @@ import grad1
 import grad2
 import draw as dr
 import task_data as td
-import quadratic_form as qf
 
 x_from, x_to = -2.0, 2.0
 y_from, y_to = -2.0, 2.0
