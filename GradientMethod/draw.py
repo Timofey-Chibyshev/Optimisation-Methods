@@ -4,8 +4,8 @@ import task_data as td
 
 
 fig = plt.figure()
-ax = fig.gca(projection='3d')
-ax.set_title('$f(x_1, x_2) = 2{x_1}^2 + {x_2}^2 + \cos(8x_1 + 3x_2) - x_1 + 2x_2$')
+ax = fig.add_subplot(projection='3d')
+ax.set_title('$f(x_1, x_2) = {x_1}^2 + {x_2}^2 + \cos(x_1 + 3x_2) - x_1 + x_2$')
 ax.set_xlabel('$Ox_1$')
 ax.set_ylabel('$Ox_2$')
 ax.set_zlabel('$Ox_3$')
