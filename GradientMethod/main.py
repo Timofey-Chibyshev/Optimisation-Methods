@@ -15,10 +15,11 @@ y_from, y_to = -2.0, 2.0
 
 
 x_start_grad_2 = np.array([-0.25, -0.5])
+eps_iter = 8
 (x_min_grad_2, points_grad_2) = grad2.calc_min(x_start=x_start_grad_2,
                                                eps=0.001,
                                                alpha_start=0.5,
-                                               grad_eps=0.01)
+                                               grad_eps=10**(-eps_iter))
 print("Last point: ", points_grad_2[-1])
 print("Last gradient norm: ", np.linalg.norm(td.calc_grad(points_grad_2[-1]), ord=2))
 print("Points number: ", len(points_grad_2))

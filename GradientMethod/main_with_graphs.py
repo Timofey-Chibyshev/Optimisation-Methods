@@ -50,4 +50,4 @@ print("Last point: ", points_grad_2[-1])
 print("Last gradient norm: ", np.linalg.norm(td.calc_grad(points_grad_2[-1]), ord=2))
 print("Points number: ", len(points_grad_2))
 
-# dr.draw()
+dr.draw()
