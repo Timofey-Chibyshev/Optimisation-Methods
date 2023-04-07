@@ -5,13 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c7a2392f-bbaf-47e2-9c05-50cf340126f4" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/GradientMethod/grad1.py" beforeDir="false" afterPath="$PROJECT_DIR$/GradientMethod/grad1.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/GradientMethod/grad2.py" beforeDir="false" afterPath="$PROJECT_DIR$/GradientMethod/grad2.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/GradientMethod/grm.py" beforeDir="false" afterPath="$PROJECT_DIR$/LinearMin/golden_sec.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GradientMethod/grad1.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/GradientMethod/grad2.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/GradientMethod/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/GradientMethod/main.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/GradientMethod/main_with_graphs.py" beforeDir="false" afterPath="$PROJECT_DIR$/GradientMethod/main_with_graphs.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/GradientMethod/quadratic_form.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/GradientMethod/task_data.py" beforeDir="false" afterPath="$PROJECT_DIR$/GradientMethod/task_data.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/GradientMethod/uniform.py" beforeDir="false" afterPath="$PROJECT_DIR$/GradientMethod/uniform.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GradientMethod/uniform.py" beforeDir="false" afterPath="$PROJECT_DIR$/GradientMethod/UniformMethod.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

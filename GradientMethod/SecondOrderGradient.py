@@ -1,7 +1,6 @@
 import task_data as td
 import numpy as np
-# import scipy.optimize as scop
-import uniform as uni
+import UniformMethod as uni
 
 
 def calc_min(x_start, alpha_start, eps, grad_eps):
