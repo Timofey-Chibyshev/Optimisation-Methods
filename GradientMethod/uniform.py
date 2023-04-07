@@ -11,9 +11,6 @@ def grid_creator(a, b, n, f):
         grid_x.append(x_i)
         grid_f.append(f(x_i))
 
-    # print(*grid_x)
-    # print(*grid_f)
-
     return grid_x, grid_f
 
 
@@ -38,8 +35,3 @@ def calc_gmp_uniform(a, b, n, eps, f):
     return (x_0 + x_1)/2, f_calls_number, iter_counter
 
 
-# def f(x):
-#     return math.sqrt(1+x**2)+math.exp(-2*x)
-#
-#
-# calc_gmp_uniform(0, 1, 5, 0.01, f)

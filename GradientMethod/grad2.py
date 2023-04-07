@@ -1,6 +1,6 @@
 import task_data as td
 import numpy as np
-import scipy.optimize as scop
+# import scipy.optimize as scop
 import uniform as uni
 
 
