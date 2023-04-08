@@ -1,3 +1,5 @@
+import math
+
 import numpy as np
 # import grad1
 import SecondOrderGradient as grad2
@@ -22,15 +24,24 @@ print("Last gradient norm: ", np.linalg.norm(td.calc_grad(points_grad_true[-1]),
 print("Points number: ", len(points_grad_true))
 
 q = list()
+k_step = list()
 for eps_iter in range(6):
-    (x_min_grad_2, points_grad_2) = grad2.calc_min(x_start=x_start_grad_2, eps=0.001, alpha_start=1, grad_eps=10**(-eps_iter))
-    q.append(np.linalg.norm(x_min_grad_true - x_min_grad_2, ord=2))
+    (x_min_grad_2_k, points_grad_2_k) = grad2.calc_min(x_start=x_start_grad_2, eps=0.001, alpha_start=1, grad_eps=10**(-eps_iter))
+    q.append(np.linalg.norm(x_min_grad_true - x_min_grad_2_k, ord=2))
+    k_step.append(len(points_grad_2_k))
+q = [(q[i]/np.linalg.norm(x_min_grad_true - x_start_grad_2, ord=2)) for i in range(len(q))]
+q_new = [np.linalg.norm(x_min_grad_true - num, ord=2) for num in points_grad_2_k]
+q_new = [q_new[i]/q_new[i - 1] for i in range(1, len(q_new))]
+print('q_new:', q_new)
 
-print("Last point: ", points_grad_2[-1])
-print("Last gradient norm: ", np.linalg.norm(td.calc_grad(points_grad_2[-1]), ord=2))
-print("Points number: ", len(points_grad_2))
+print("Last point: ", points_grad_2_k[-1])
+print("Last gradient norm: ", np.linalg.norm(td.calc_grad(points_grad_2_k[-1]), ord=2))
+print("Points number: ", len(points_grad_2_k))
 print("q:", q)
-
+print("k:", k_step)
+### Counting Const
+C = math.sqrt(td.calc_func(x_start_grad_2) - td.calc_func(x_min_grad_true))
+print("C:", C)
 
 
 '''
