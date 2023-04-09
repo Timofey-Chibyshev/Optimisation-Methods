@@ -31,7 +31,7 @@ for eps_iter in range(6):
     k_step.append(len(points_grad_2_k))
 q = [(q[i]/np.linalg.norm(x_min_grad_true - x_start_grad_2, ord=2)) for i in range(len(q))]
 q_new = [np.linalg.norm(x_min_grad_true - num, ord=2) for num in points_grad_2_k]
-q_new = [q_new[i]/q_new[i - 1] for i in range(1, len(q_new))]
+q_new = [q_new[i]/q_new[i - 1]**(-i) for i in range(1, len(q_new))]
 print('q_new:', q_new)
 
 print("Last point: ", points_grad_2_k[-1])

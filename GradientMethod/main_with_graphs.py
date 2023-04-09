@@ -34,7 +34,7 @@ x_start_grad_2 = np.array([-0.25, -0.5])
 (x_min_grad_2, points_grad_2) = grad2.calc_min(x_start=x_start_grad_2,
                                                eps=0.001,
                                                alpha_start=1,
-                                               grad_eps=0.01)
+                                               grad_eps=0.001)
 x = np.zeros(len(points_grad_2))
 y = np.zeros(len(points_grad_2))
 z = np.zeros(len(points_grad_2))
