@@ -5,11 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c7a2392f-bbaf-47e2-9c05-50cf340126f4" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/GradientMethod/grad1.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/GradientMethod/grad2.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/GradientMethod/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/GradientMethod/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/Optimisation-Methods.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/Optimisation-Methods.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GradientMethod/FirstOrderGradient.py" beforeDir="false" afterPath="$PROJECT_DIR$/GradientMethod/FirstOrderGradient.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GradientMethod/graphics_2d_compare_methods.py" beforeDir="false" afterPath="$PROJECT_DIR$/GradientMethod/graphics_2d_compare_methods.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/GradientMethod/main_with_graphs.py" beforeDir="false" afterPath="$PROJECT_DIR$/GradientMethod/main_with_graphs.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/GradientMethod/uniform.py" beforeDir="false" afterPath="$PROJECT_DIR$/GradientMethod/UniformMethod.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -31,7 +32,7 @@
   "keyToString": {
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "last_opened_file_path": "C:/Users/Zirael/Desktop/Optimisation-Methods"
+    "last_opened_file_path": "C:/Users/vanek/Documents/GitHub/Optimisation-Methods1"
   }
 }]]></component>
   <component name="RecentsManager">
