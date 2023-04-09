@@ -9,41 +9,31 @@ def grad_f(x):
     return [2 * x[0] - math.sin(x[0] + 3 * x[1]) - 1, 2 * x[1] - 3 * math.sin(x[0] + 3 * x[1]) + 2]
 
 
-def first_order_gradient_const_step(gradient, eps, step, x0):
-    grad = gradient(x0)
+def first_order_gradient_const_step(eps, x0):
+    grad = grad_f(x0)
     x = x0
-    count = 1
+    step = 2 / (2 + 12)  # 2 / (M + m)
+    points = [x]
     while grad[0] ** 2 + grad[1] ** 2 > eps:
         x[0] = x[0] - step * grad[0]
         x[1] = x[1] - step * grad[1]
-        grad = gradient(x)
-        count += 1
-    print(count)
-    return x
+        grad = grad_f(x)
+        points.append(x)
+#    print(len(points))
+    return x, points
 
 
-eps = 0.001
-step = 0.1
-x0 = [-0.25, -0.5]
-x = first_order_gradient_const_step(grad_f, eps, step, x0)
-
-print(x, f(x))
-
-
-def first_order_gradient_optimal_step(f, gradient, eps, x0):
-    grad = gradient(x0)
+def first_order_gradient_optimal_step(eps, x0):
+    grad = grad_f(x0)
     x = x0
-    count = 1
+    points = [x]
     while grad[0] ** 2 + grad[1] ** 2 > eps:
         step = fibonacci(0, 1, 0.01, f, x, grad)
         x[0] = x[0] - step * grad[0]
         x[1] = x[1] - step * grad[1]
-        grad = gradient(x)
-        count += 1
-    print(count)
-    return x
+        points.append(x)
+        grad = grad_f(x)
+    #print(len(points))
+    return x, points
 
 
-x0 = [-0.25, -0.5]
-x = first_order_gradient_optimal_step(f, grad_f, eps, x0)
-print(x, f(x))

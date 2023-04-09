@@ -3,6 +3,7 @@ import math
 import numpy as np
 # import grad1
 import SecondOrderGradient as grad2
+from FirstOrderGradient import first_order_gradient_optimal_step, first_order_gradient_const_step
 import task_data as td
 import matplotlib.pyplot as plt
 
@@ -48,21 +49,35 @@ print("C:", C)
     График зависимости количества итераций от точности
                                                         '''
 iters_secondOrder = list()
-fact_ac = list()
+iters_firstOrder_const = []
+iters_firstOrder_opt = []
+
+fact_ac_secondOrder = list()
+fact_ac_firstOrder_const = []
+fact_ac_firstOrder_opt = []
 eps_graph = [10 ** (-i) for i in range(10)]
 for eps_iter in eps_graph:
-    print(eps_iter)
+    #print(eps_iter)
     (x_min_grad_tmp, points_grad_tmp) = grad2.calc_min(x_start=x_start_grad_2, eps=0.001, alpha_start=1, grad_eps=eps_iter)
-    print("Количество точек:", points_grad_tmp)
+    #print("Количество точек:", points_grad_tmp)
     iters_secondOrder.append(len(points_grad_tmp))
-    fact_ac.append(np.linalg.norm(x_min_grad_tmp - x_min_grad_true, ord=2))
+    fact_ac_secondOrder.append(np.linalg.norm(x_min_grad_tmp - x_min_grad_true, ord=2))
 
-# ВАНЯ ТУТ СВОЙ ЕЩЕ ВПИШЕТ
+    (x_min_grad_tmp, points_grad_tmp) = first_order_gradient_const_step(eps_iter, [-0.25, -0.5])
+    iters_firstOrder_const.append(len(points_grad_tmp))
+    fact_ac_firstOrder_const.append(np.linalg.norm(x_min_grad_true - np.array(x_min_grad_tmp), ord=2))
+
+    (x_min_grad_tmp, points_grad_tmp) = first_order_gradient_optimal_step(eps_iter, [-0.25, -0.5])
+    iters_firstOrder_opt.append(len(points_grad_tmp))
+    fact_ac_firstOrder_opt.append(np.linalg.norm(x_min_grad_true - np.array(x_min_grad_tmp), ord=2))
+
+
 fig_eps = plt.figure()
 ax_eps = fig_eps.add_subplot(1, 1, 1)
 
 ax_eps.semilogx(eps_graph, iters_secondOrder, label='Метод второго порядка')
-# ax_eps.semilogx(eps_graph, iters_VANYA, label='Метод первого порядка')
+ax_eps.semilogx(eps_graph, iters_firstOrder_const, label='Метод первого порядка с постоянным шагом')
+ax_eps.semilogx(eps_graph, iters_firstOrder_opt, label='Метод первого порядка с оптимальным шагом')
 ax_eps.grid()
 ax_eps.set_ylabel('iters')  # Add an x-label to the axes.
 ax_eps.set_xlabel('eps')  # Add a y-label to the axes.
@@ -77,8 +92,9 @@ plt.show()
 fig_fac = plt.figure()
 ax_fac = fig_fac.add_subplot(1, 1, 1)
 
-ax_fac.loglog(eps_graph, fact_ac, label='Метод второго порядка')
-# ax_fac.loglog(eps_graph, fact_ac_VANYA, label='Метод первого порядка')
+ax_fac.loglog(eps_graph, fact_ac_secondOrder, label='Метод второго порядка')
+ax_fac.loglog(eps_graph, fact_ac_firstOrder_const, label='Метод первого порядка с постоянным шагом')
+ax_fac.loglog(eps_graph, fact_ac_firstOrder_opt, label='Метод первого порядка с оптимальным шагом')
 ax_fac.grid()
 ax_fac.set_ylabel('fact_eps')  # Add an x-label to the axes.
 ax_fac.set_xlabel('eps')  # Add a y-label to the axes.
