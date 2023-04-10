@@ -38,15 +38,15 @@ def first_order_gradient_optimal_step(eps, x0):
     return x, points
 
 
-x, points = first_order_gradient_const_step(0.01, [-0.25, -0.5])
-#print(points)
-for k in range(len(points) - 1):
-    x_k_norm = ((x[0] - points[k][0]) ** 2 + (x[1] - points[k][1]) ** 2) ** 0.5
-    if k != 0:
-        print("q :", (x_k_norm / x_0_norm) ** (1 / k))
-        print("alpha : ", x_k_norm / x_k1_norm)
-    else:
-        x_0_norm = x_k_norm
-        x_k1_norm = x_k_norm
+# x, points = first_order_gradient_const_step(0.01, [-0.25, -0.5])
+# #print(points)
+# for k in range(len(points) - 1):
+#     x_k_norm = ((x[0] - points[k][0]) ** 2 + (x[1] - points[k][1]) ** 2) ** 0.5
+#     if k != 0:
+#         print("q :", (x_k_norm / x_0_norm) ** (1 / k))
+#         print("alpha : ", x_k_norm / x_k1_norm)
+#     else:
+#         x_0_norm = x_k_norm
+#         x_k1_norm = x_k_norm
 
 
