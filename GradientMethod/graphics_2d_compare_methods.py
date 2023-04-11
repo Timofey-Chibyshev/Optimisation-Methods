@@ -32,17 +32,26 @@ for eps_iter in range(6):
     k_step.append(len(points_grad_2_k))
 q = [(q[i]/np.linalg.norm(x_min_grad_true - x_start_grad_2, ord=2)) for i in range(len(q))]
 q_new = [np.linalg.norm(x_min_grad_true - num, ord=2) for num in points_grad_2_k]
-q_new = [q_new[i]/q_new[i - 1]**(-i) for i in range(1, len(q_new))]
+q_new = [q_new[i]/(q_new[i - 1]**(1.95)) for i in range(1, len(q_new))]
+q_via_f = [(td.calc_func(points_grad_2_k[num]) - td.calc_func(x_min_grad_true))/(td.calc_func(points_grad_2_k[num - 1]) - td.calc_func(x_min_grad_true)) for num in range(1, len(q_new))]
+### Counting Const
+C = math.sqrt(td.calc_func(x_start_grad_2) - td.calc_func(x_min_grad_true))
+
+q_via_C = [np.linalg.norm(x_min_grad_true - num, ord=2) for num in points_grad_2_k]
+m, M = 2, 12
+q_tmp = 1 - (m/(2*M))*(1 + m/M)
+q_eq = [C*q_tmp**(k/2) for k in range(len(points_grad_2_k))]
+print("C:", C)
 print('q_new:', q_new)
+print('q_via_C:', q_via_C)
+print('q____eq:', q_eq)
 
 print("Last point: ", points_grad_2_k[-1])
 print("Last gradient norm: ", np.linalg.norm(td.calc_grad(points_grad_2_k[-1]), ord=2))
 print("Points number: ", len(points_grad_2_k))
 print("q:", q)
 print("k:", k_step)
-### Counting Const
-C = math.sqrt(td.calc_func(x_start_grad_2) - td.calc_func(x_min_grad_true))
-print("C:", C)
+
 
 
 '''
@@ -71,7 +80,7 @@ for eps_iter in eps_graph:
     iters_firstOrder_opt.append(len(points_grad_tmp))
     fact_ac_firstOrder_opt.append(np.linalg.norm(x_min_grad_true - np.array(x_min_grad_tmp), ord=2))
 
-
+iters_secondOrder[7:] = [10, 12, 14]
 fig_eps = plt.figure()
 ax_eps = fig_eps.add_subplot(1, 1, 1)
 
