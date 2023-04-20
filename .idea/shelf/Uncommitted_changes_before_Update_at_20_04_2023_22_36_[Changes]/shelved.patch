@@ -1,0 +1,482 @@
+Index: GradientMethod/FirstOrderGradient.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>import math\r\nfrom FibonacciMethod import fibonacci\r\n\r\n\r\ndef f(x):\r\n    return x[0] * x[0] + x[1] * x[1] + math.cos(x[0] + 3 * x[1]) - x[0] + 2 * x[1]\r\n\r\n\r\ndef grad_f(x):\r\n    return [2 * x[0] - math.sin(x[0] + 3 * x[1]) - 1, 2 * x[1] - 3 * math.sin(x[0] + 3 * x[1]) + 2]\r\n\r\n\r\ndef first_order_gradient_const_step(eps, x0):\r\n    grad = grad_f(x0)\r\n    x = x0\r\n    step = 2 / (2 + 12)  # 2 / (M + m)\r\n    points = [x[:]]\r\n    while grad[0] ** 2 + grad[1] ** 2 > eps:\r\n        x[0] = x[0] - step * grad[0]\r\n        x[1] = x[1] - step * grad[1]\r\n        grad = grad_f(x)\r\n        points.append(x[:])\r\n    #    print(len(points))\r\n    return x, points\r\n\r\n\r\ndef first_order_gradient_optimal_step(eps, x0):\r\n    grad = grad_f(x0)\r\n    x = x0\r\n    points = [x[:]]\r\n    while grad[0] ** 2 + grad[1] ** 2 > eps:\r\n        step = fibonacci(0, 1, 0.01, f, x, grad)\r\n        x[0] = x[0] - step * grad[0]\r\n        x[1] = x[1] - step * grad[1]\r\n        points.append(x[:])\r\n        grad = grad_f(x)\r\n    # print(len(points))\r\n    return x, points\r\n\r\n\r\n# x, points = first_order_gradient_const_step(0.01, [-0.25, -0.5])\r\n# #print(points)\r\n# for k in range(len(points) - 1):\r\n#     x_k_norm = ((x[0] - points[k][0]) ** 2 + (x[1] - points[k][1]) ** 2) ** 0.5\r\n#     if k != 0:\r\n#         print(\"q :\", (x_k_norm / x_0_norm) ** (1 / k))\r\n#         print(\"alpha : \", x_k_norm / x_k1_norm)\r\n#     else:\r\n#         x_0_norm = x_k_norm\r\n#         x_k1_norm = x_k_norm\r\n\r\n\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/GradientMethod/FirstOrderGradient.py b/GradientMethod/FirstOrderGradient.py
+--- a/GradientMethod/FirstOrderGradient.py	(revision 4db4ac23abe3453de94c0458e48cf0447818e8d1)
++++ b/GradientMethod/FirstOrderGradient.py	(date 1681122372006)
+@@ -10,9 +10,9 @@
+     return [2 * x[0] - math.sin(x[0] + 3 * x[1]) - 1, 2 * x[1] - 3 * math.sin(x[0] + 3 * x[1]) + 2]
+ 
+ 
+-def first_order_gradient_const_step(eps, x0):
+-    grad = grad_f(x0)
+-    x = x0
++def first_order_gradient_const_step(eps, x_start):
++    grad = grad_f(x_start)
++    x = x_start
+     step = 2 / (2 + 12)  # 2 / (M + m)
+     points = [x[:]]
+     while grad[0] ** 2 + grad[1] ** 2 > eps:
+@@ -20,13 +20,13 @@
+         x[1] = x[1] - step * grad[1]
+         grad = grad_f(x)
+         points.append(x[:])
+-    #    print(len(points))
++    # print(points)
+     return x, points
+ 
+ 
+-def first_order_gradient_optimal_step(eps, x0):
+-    grad = grad_f(x0)
+-    x = x0
++def first_order_gradient_optimal_step(eps, x_start):
++    grad = grad_f(x_start)
++    x = x_start
+     points = [x[:]]
+     while grad[0] ** 2 + grad[1] ** 2 > eps:
+         step = fibonacci(0, 1, 0.01, f, x, grad)
+Index: GradientMethod/3d_projections.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>import numpy as np\r\nfrom mpl_toolkits.mplot3d import axes3d\r\nimport matplotlib.pyplot as plt\r\nimport task_data as td\r\nfrom matplotlib import cm\r\n\r\nfig = plt.figure()\r\nax = fig.add_subplot(projection='3d')\r\nax.set_title('$f(x_1, x_2) = {x_1}^2 + {x_2}^2 + \\cos(x_1 + 3x_2) - x_1 + x_2$')\r\nax.set_xlabel('$Ox_1$')\r\nax.set_ylabel('$Ox_2$')\r\nax.set_zlabel('$Ox_3$')\r\n\r\ndef func_3d(ax, x, y):\r\n    x_grid, y_grid = np.meshgrid(x, y)\r\n    z_grid = np.zeros((len(y), len(x)))\r\n    for y_ind in range(len(y)):\r\n        for x_ind in range(len(x)):\r\n            arg = np.array([x[x_ind], y[y_ind]])\r\n            z_grid[y_ind][x_ind] = td.calc_func(arg)\r\n    ax.plot_surface(x_grid, y_grid, z_grid, cmap=cm.hot, lw=0.5, rstride=8, cstride=8, alpha=0.3)\r\n    ax.contour(x_grid, y_grid, z_grid, zdir='z', offset=-2, cmap='coolwarm')\r\n    ax.contour(x_grid, y_grid, z_grid, zdir='x', offset=-2, cmap='coolwarm')\r\n    ax.contour(x_grid, y_grid, z_grid, zdir='y', offset=2, cmap='coolwarm')\r\n\r\nx_from, x_to = -2.0, 2.0\r\ny_from, y_to = -2.0, 2.0\r\nx_draw_func = np.linspace(x_from, x_to, 300)\r\ny_draw_func = np.linspace(y_from, y_to, 300)\r\nfunc_3d(ax, x=x_draw_func, y=y_draw_func)\r\n\r\nplt.show()\r\n\r\n# X, Y, Z = axes3d.get_test_data(0.05)\r\n#\r\n# # Plot the 3D surface\r\n# ax.plot_surface(X, Y, Z, edgecolor='royalblue', lw=0.5, rstride=8, cstride=8,\r\n#                 alpha=0.3)\r\n#\r\n# # Plot projections of the contours for each dimension.  By choosing offsets\r\n# # that match the appropriate axes limits, the projected contours will sit on\r\n# # the 'walls' of the graph.\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/GradientMethod/3d_projections.py b/GradientMethod/3d_projections.py
+--- a/GradientMethod/3d_projections.py	(revision 4db4ac23abe3453de94c0458e48cf0447818e8d1)
++++ b/GradientMethod/3d_projections.py	(date 1681120658735)
+@@ -6,11 +6,12 @@
+ 
+ fig = plt.figure()
+ ax = fig.add_subplot(projection='3d')
+-ax.set_title('$f(x_1, x_2) = {x_1}^2 + {x_2}^2 + \cos(x_1 + 3x_2) - x_1 + x_2$')
++ax.set_title('$f(x_1, x_2) = {x_1}^2 + {x_2}^2 + \cos(x_1 + 3x_2) - x_1 + 2*x_2$')
+ ax.set_xlabel('$Ox_1$')
+ ax.set_ylabel('$Ox_2$')
+ ax.set_zlabel('$Ox_3$')
+ 
++
+ def func_3d(ax, x, y):
+     x_grid, y_grid = np.meshgrid(x, y)
+     z_grid = np.zeros((len(y), len(x)))
+@@ -23,6 +24,7 @@
+     ax.contour(x_grid, y_grid, z_grid, zdir='x', offset=-2, cmap='coolwarm')
+     ax.contour(x_grid, y_grid, z_grid, zdir='y', offset=2, cmap='coolwarm')
+ 
++
+ x_from, x_to = -2.0, 2.0
+ y_from, y_to = -2.0, 2.0
+ x_draw_func = np.linspace(x_from, x_to, 300)
+Index: .idea/workspace.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project version=\"4\">\r\n  <component name=\"AutoImportSettings\">\r\n    <option name=\"autoReloadType\" value=\"SELECTIVE\" />\r\n  </component>\r\n  <component name=\"ChangeListManager\">\r\n    <list default=\"true\" id=\"c7a2392f-bbaf-47e2-9c05-50cf340126f4\" name=\"Changes\" comment=\"\">\r\n      <change beforePath=\"$PROJECT_DIR$/.idea/misc.xml\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/.idea/misc.xml\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/.idea/workspace.xml\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/.idea/workspace.xml\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/GradientMethod/FirstOrderGradient.py\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/GradientMethod/FirstOrderGradient.py\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/GradientMethod/draw.py\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/GradientMethod/draw.py\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/GradientMethod/main_with_graphs.py\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/GradientMethod/main_with_graphs.py\" afterDir=\"false\" />\r\n    </list>\r\n    <option name=\"SHOW_DIALOG\" value=\"false\" />\r\n    <option name=\"HIGHLIGHT_CONFLICTS\" value=\"true\" />\r\n    <option name=\"HIGHLIGHT_NON_ACTIVE_CHANGELIST\" value=\"false\" />\r\n    <option name=\"LAST_RESOLUTION\" value=\"IGNORE\" />\r\n  </component>\r\n  <component name=\"Git.Settings\">\r\n    <option name=\"RECENT_GIT_ROOT_PATH\" value=\"$PROJECT_DIR$\" />\r\n  </component>\r\n  <component name=\"MarkdownSettingsMigration\">\r\n    <option name=\"stateVersion\" value=\"1\" />\r\n  </component>\r\n  <component name=\"ProjectId\" id=\"2O6uNPuthTIkRyfYG4sEbyMq1hZ\" />\r\n  <component name=\"ProjectViewState\">\r\n    <option name=\"hideEmptyMiddlePackages\" value=\"true\" />\r\n    <option name=\"showLibraryContents\" value=\"true\" />\r\n  </component>\r\n  <component name=\"PropertiesComponent\">{\r\n  &quot;keyToString&quot;: {\r\n    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,\r\n    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,\r\n    &quot;last_opened_file_path&quot;: &quot;C:/Users/vanek/Documents/GitHub/Optimisation-Methods1&quot;\r\n  }\r\n}</component>\r\n  <component name=\"RecentsManager\">\r\n    <key name=\"MoveFile.RECENT_KEYS\">\r\n      <recent name=\"C:\\Users\\Zirael\\Desktop\\Optimisation-Methods\\LinearMin\" />\r\n      <recent name=\"C:\\Users\\Zirael\\Desktop\\Optimisation-Methods\\GradientMethod\" />\r\n    </key>\r\n  </component>\r\n  <component name=\"RunManager\">\r\n    <configuration name=\"main_with_graphs\" type=\"PythonConfigurationType\" factoryName=\"Python\" nameIsGenerated=\"true\">\r\n      <module name=\"Optimisation-Methods\" />\r\n      <option name=\"INTERPRETER_OPTIONS\" value=\"\" />\r\n      <option name=\"PARENT_ENVS\" value=\"true\" />\r\n      <envs>\r\n        <env name=\"PYTHONUNBUFFERED\" value=\"1\" />\r\n      </envs>\r\n      <option name=\"SDK_HOME\" value=\"\" />\r\n      <option name=\"WORKING_DIRECTORY\" value=\"$PROJECT_DIR$/GradientMethod\" />\r\n      <option name=\"IS_MODULE_SDK\" value=\"true\" />\r\n      <option name=\"ADD_CONTENT_ROOTS\" value=\"true\" />\r\n      <option name=\"ADD_SOURCE_ROOTS\" value=\"true\" />\r\n      <option name=\"SCRIPT_NAME\" value=\"$PROJECT_DIR$/GradientMethod/main_with_graphs.py\" />\r\n      <option name=\"PARAMETERS\" value=\"\" />\r\n      <option name=\"SHOW_COMMAND_LINE\" value=\"false\" />\r\n      <option name=\"EMULATE_TERMINAL\" value=\"false\" />\r\n      <option name=\"MODULE_MODE\" value=\"false\" />\r\n      <option name=\"REDIRECT_INPUT\" value=\"false\" />\r\n      <option name=\"INPUT_FILE\" value=\"\" />\r\n      <method v=\"2\" />\r\n    </configuration>\r\n  </component>\r\n  <component name=\"SpellCheckerSettings\" RuntimeDictionaries=\"0\" Folders=\"0\" CustomDictionaries=\"0\" DefaultDictionary=\"application-level\" UseSingleDictionary=\"true\" transferred=\"true\" />\r\n  <component name=\"TaskManager\">\r\n    <task active=\"true\" id=\"Default\" summary=\"Default task\">\r\n      <changelist id=\"c7a2392f-bbaf-47e2-9c05-50cf340126f4\" name=\"Changes\" comment=\"\" />\r\n      <created>1680893313164</created>\r\n      <option name=\"number\" value=\"Default\" />\r\n      <option name=\"presentableId\" value=\"Default\" />\r\n      <updated>1680893313164</updated>\r\n    </task>\r\n    <servers />\r\n  </component>\r\n  <component name=\"Vcs.Log.Tabs.Properties\">\r\n    <option name=\"TAB_STATES\">\r\n      <map>\r\n        <entry key=\"MAIN\">\r\n          <value>\r\n            <State>\r\n              <option name=\"FILTERS\">\r\n                <map>\r\n                  <entry key=\"branch\">\r\n                    <value>\r\n                      <list>\r\n                        <option value=\"main\" />\r\n                      </list>\r\n                    </value>\r\n                  </entry>\r\n                </map>\r\n              </option>\r\n            </State>\r\n          </value>\r\n        </entry>\r\n      </map>\r\n    </option>\r\n  </component>\r\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/workspace.xml b/.idea/workspace.xml
+--- a/.idea/workspace.xml	(revision 4db4ac23abe3453de94c0458e48cf0447818e8d1)
++++ b/.idea/workspace.xml	(date 1682019206944)
+@@ -5,9 +5,11 @@
+   </component>
+   <component name="ChangeListManager">
+     <list default="true" id="c7a2392f-bbaf-47e2-9c05-50cf340126f4" name="Changes" comment="">
+-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
++      <change afterPath="$PROJECT_DIR$/GradientMethod/table1.py" afterDir="false" />
+       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/GradientMethod/3d_projections.py" beforeDir="false" afterPath="$PROJECT_DIR$/GradientMethod/3d_projections.py" afterDir="false" />
+       <change beforePath="$PROJECT_DIR$/GradientMethod/FirstOrderGradient.py" beforeDir="false" afterPath="$PROJECT_DIR$/GradientMethod/FirstOrderGradient.py" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/GradientMethod/SecondOrderGradient.py" beforeDir="false" afterPath="$PROJECT_DIR$/GradientMethod/SecondOrderGradient.py" afterDir="false" />
+       <change beforePath="$PROJECT_DIR$/GradientMethod/draw.py" beforeDir="false" afterPath="$PROJECT_DIR$/GradientMethod/draw.py" afterDir="false" />
+       <change beforePath="$PROJECT_DIR$/GradientMethod/main_with_graphs.py" beforeDir="false" afterPath="$PROJECT_DIR$/GradientMethod/main_with_graphs.py" afterDir="false" />
+     </list>
+@@ -16,6 +18,13 @@
+     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+     <option name="LAST_RESOLUTION" value="IGNORE" />
+   </component>
++  <component name="FileTemplateManagerImpl">
++    <option name="RECENT_TEMPLATES">
++      <list>
++        <option value="Python Script" />
++      </list>
++    </option>
++  </component>
+   <component name="Git.Settings">
+     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+   </component>
+@@ -27,13 +36,13 @@
+     <option name="hideEmptyMiddlePackages" value="true" />
+     <option name="showLibraryContents" value="true" />
+   </component>
+-  <component name="PropertiesComponent">{
+-  &quot;keyToString&quot;: {
+-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+-    &quot;last_opened_file_path&quot;: &quot;C:/Users/vanek/Documents/GitHub/Optimisation-Methods1&quot;
++  <component name="PropertiesComponent"><![CDATA[{
++  "keyToString": {
++    "RunOnceActivity.OpenProjectViewOnStart": "true",
++    "RunOnceActivity.ShowReadmeOnStart": "true",
++    "last_opened_file_path": "C:/Users/Zirael/Desktop/Optimisation-Methods"
+   }
+-}</component>
++}]]></component>
+   <component name="RecentsManager">
+     <key name="MoveFile.RECENT_KEYS">
+       <recent name="C:\Users\Zirael\Desktop\Optimisation-Methods\LinearMin" />
+@@ -85,7 +94,7 @@
+                   <entry key="branch">
+                     <value>
+                       <list>
+-                        <option value="main" />
++                        <option value="origin/main" />
+                       </list>
+                     </value>
+                   </entry>
+Index: GradientMethod/draw.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>import matplotlib.pyplot as plt\r\nimport numpy as np\r\nimport task_data as td\r\nimport time\r\n\r\nfig = plt.figure()\r\nax = fig.add_subplot(projection='3d')\r\nax.set_title('$f(x_1, x_2) = {x_1}^2 + {x_2}^2 + \\cos(x_1 + 3x_2) - x_1 + 2x_2$')\r\nax.set_xlabel('$Ox_1$')\r\nax.set_ylabel('$Ox_2$')\r\nax.set_zlabel('$Ox_3$')\r\n\r\n\r\ndef add_task_func_to_ax(ax, x, y):\r\n    x_grid, y_grid = np.meshgrid(x, y)\r\n    z_grid = np.zeros((len(y), len(x)))\r\n    for y_ind in range(len(y)):\r\n        for x_ind in range(len(x)):\r\n            arg = np.array([x[x_ind], y[y_ind]])\r\n            z_grid[y_ind][x_ind] = td.calc_func(arg)\r\n    ax.plot_wireframe(x_grid, y_grid, z_grid, alpha=0.3, cmap='Blues')\r\n\r\n\r\n#\r\n# def add_points_to_ax(ax, x, y, z, color, text=False, text_color='r', max_ind=0):\r\n#     for ind in range(len(x)):\r\n#         if text is True:\r\n#             for text_ind in range( min(len(x), max_ind)):\r\n#                 ax.text(x[text_ind], y[text_ind], z[text_ind] + 0.5, str(text_ind + 1), color=text_color)\r\n#         ax.scatter(x[ind], y[ind], z[ind], color=color, marker='*')\r\n#\r\n#\r\ndef add_points_to_ax(ax, x, y, z, text=False, max_ind=0):\r\n    for ind in range(0, len(x) - 1):\r\n        point = ax.scatter(x[0], y[0], z[0], c='red', marker='*')  # начальная точка\r\n        if text is True:\r\n            for text_ind in range(min(len(x), max_ind)):\r\n                ax.text(x[text_ind], y[text_ind], z[text_ind] + 0.5, str(text_ind + 1), color='r')\r\n        point.set_offsets([[x[ind], y[ind], z[ind]]])  # отображение нового положения точки\r\n        # перерисовка графика и задержка на 20 мс\r\n        fig.canvas.draw()\r\n        fig.canvas.flush_events()\r\n        time.sleep(0.02)\r\n        # ax.scatter(x[ind], y[ind], z[ind], color=color, marker='*')\r\n        ax.plot(x, y, z, '.-', c='red')\r\n    ax.scatter(x[len(x) - 1], y[len(x) - 1], z[len(x) - 1], color='blue', marker='*')\r\n\r\n\r\ndef level_lines(ax, x, y, x_draw_func, y_draw_func):\r\n    x1, y1 = np.meshgrid(x_draw_func, y_draw_func)  # создадим координатную плоскость из осей w1 и w2\r\n    C = td.calc_func([x1, y1])  # пропишем функцию цели\r\n    plt.contourf(x1, y1, C, cmap='Blues')  # построим изолинии (линии уровня)\r\n    for ind in range(0, len(x) - 1):\r\n        point = ax.scatter(x[0], y[0], c='red', marker='*')  # начальная точка\r\n        for text_ind in range(min(len(x), len(x))):\r\n            ax.text(x[text_ind], y[text_ind] + 0.1, str(text_ind + 1), color='r')\r\n\r\n        point.set_offsets([x[ind], y[ind]])  # отображение нового положения точки\r\n        # перерисовка графика и задержка на 20 мс\r\n        fig.canvas.draw()\r\n        fig.canvas.flush_events()\r\n        time.sleep(0.02)\r\n        # ax.scatter(x[ind], y[ind], z[ind], color=color, marker='*')\r\n    ax.plot(x, y, '.-', c='red', )\r\n    ax.scatter(x[len(x) - 1], y[len(x) - 1], c='blue', marker='*', s=50)\r\n    ax.set_title('$f(x_1, x_2) = {x_1}^2 + {x_2}^2 + \\cos(x_1 + 3x_2) - x_1 + 2x_2$')\r\n    ax.set_xlabel('$Ox_1$')\r\n    ax.set_ylabel('$Ox_2$')\r\n    plt.grid(linestyle='--')  # создадим сетку в виде прерывистой черты\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/GradientMethod/draw.py b/GradientMethod/draw.py
+--- a/GradientMethod/draw.py	(revision 4db4ac23abe3453de94c0458e48cf0447818e8d1)
++++ b/GradientMethod/draw.py	(date 1681133747975)
+@@ -3,12 +3,29 @@
+ import task_data as td
+ import time
+ 
+-fig = plt.figure()
+-ax = fig.add_subplot(projection='3d')
+-ax.set_title('$f(x_1, x_2) = {x_1}^2 + {x_2}^2 + \cos(x_1 + 3x_2) - x_1 + 2x_2$')
+-ax.set_xlabel('$Ox_1$')
+-ax.set_ylabel('$Ox_2$')
+-ax.set_zlabel('$Ox_3$')
++fig1 = plt.figure()
++ax1 = fig1.add_subplot(projection='3d')
++ax1.set_title('$f(x_1, x_2) = {x_1}^2 + {x_2}^2 + \cos(x_1 + 3x_2) - x_1 + 2x_2$'
++              '\nМетод первого порядка с постоянным шагом')
++ax1.set_xlabel('$Ox_1$')
++ax1.set_ylabel('$Ox_2$')
++ax1.set_zlabel('$Ox_3$')
++
++fig2 = plt.figure()
++ax2 = fig2.add_subplot(projection='3d')
++ax2.set_title('$f(x_1, x_2) = {x_1}^2 + {x_2}^2 + \cos(x_1 + 3x_2) - x_1 + 2x_2$'
++              '\nМетод первого порядка с оптимальным шагом')
++ax2.set_xlabel('$Ox_1$')
++ax2.set_ylabel('$Ox_2$')
++ax2.set_zlabel('$Ox_3$')
++
++fig3 = plt.figure()
++ax3 = fig3.add_subplot(projection='3d')
++ax3.set_title('$f(x_1, x_2) = {x_1}^2 + {x_2}^2 + \cos(x_1 + 3x_2) - x_1 + 2x_2$'
++              '\nМетод второго порядка')
++ax3.set_xlabel('$Ox_1$')
++ax3.set_ylabel('$Ox_2$')
++ax3.set_zlabel('$Ox_3$')
+ 
+ 
+ def add_task_func_to_ax(ax, x, y):
+@@ -21,49 +38,40 @@
+     ax.plot_wireframe(x_grid, y_grid, z_grid, alpha=0.3, cmap='Blues')
+ 
+ 
+-#
+-# def add_points_to_ax(ax, x, y, z, color, text=False, text_color='r', max_ind=0):
+-#     for ind in range(len(x)):
+-#         if text is True:
+-#             for text_ind in range( min(len(x), max_ind)):
+-#                 ax.text(x[text_ind], y[text_ind], z[text_ind] + 0.5, str(text_ind + 1), color=text_color)
+-#         ax.scatter(x[ind], y[ind], z[ind], color=color, marker='*')
+-#
+-#
+-def add_points_to_ax(ax, x, y, z, text=False, max_ind=0):
++def add_points_to_ax(ax, x, y, z, fig, text=False, max_ind=0):
+     for ind in range(0, len(x) - 1):
+-        point = ax.scatter(x[0], y[0], z[0], c='red', marker='*')  # начальная точка
++        point = ax.scatter(x[0], y[0], z[0], c='r', marker='*')  # начальная точка
+         if text is True:
+             for text_ind in range(min(len(x), max_ind)):
+-                ax.text(x[text_ind], y[text_ind], z[text_ind] + 0.5, str(text_ind + 1), color='r')
+-        point.set_offsets([[x[ind], y[ind], z[ind]]])  # отображение нового положения точки
+-        # перерисовка графика и задержка на 20 мс
+-        fig.canvas.draw()
+-        fig.canvas.flush_events()
+-        time.sleep(0.02)
+-        # ax.scatter(x[ind], y[ind], z[ind], color=color, marker='*')
+-        ax.plot(x, y, z, '.-', c='red')
+-    ax.scatter(x[len(x) - 1], y[len(x) - 1], z[len(x) - 1], color='blue', marker='*')
++                ax.text(x[text_ind], y[text_ind], z[text_ind] + 0.5, str(text_ind + 1), color="black")
++        # point.set_offsets([[x[ind], y[ind], z[ind]]])  # отображение нового положения точки
++        ax.scatter(x[ind + 1], y[ind + 1], z[ind + 1], color='blue', marker='*')
++        # # перерисовка графика и задержка на 20 мс
++        # fig.canvas.draw()
++        # fig.canvas.flush_events()
++        # time.sleep(0.02)
++        ax.plot(x, y, z, '--', c="y", linewidth=1)
++    ax.scatter(x[len(x) - 1], y[len(x) - 1], z[len(x) - 1], color='green', marker='*')
+ 
+ 
+-def level_lines(ax, x, y, x_draw_func, y_draw_func):
++def level_lines(ax, x, y, z, x_draw_func, y_draw_func, fig, Text=True):
+     x1, y1 = np.meshgrid(x_draw_func, y_draw_func)  # создадим координатную плоскость из осей w1 и w2
+     C = td.calc_func([x1, y1])  # пропишем функцию цели
+     plt.contourf(x1, y1, C, cmap='Blues')  # построим изолинии (линии уровня)
+     for ind in range(0, len(x) - 1):
+         point = ax.scatter(x[0], y[0], c='red', marker='*')  # начальная точка
+-        for text_ind in range(min(len(x), len(x))):
+-            ax.text(x[text_ind], y[text_ind] + 0.1, str(text_ind + 1), color='r')
++        if Text == True:
++            for text_ind in range(min(len(x), len(x))):
++                ax.text(x[text_ind], y[text_ind] + 0.1, str(text_ind + 1), color='black')
++        ax.scatter(x[ind + 1], y[ind + 1], color='blue', marker='*')
+ 
+-        point.set_offsets([x[ind], y[ind]])  # отображение нового положения точки
+-        # перерисовка графика и задержка на 20 мс
+-        fig.canvas.draw()
+-        fig.canvas.flush_events()
+-        time.sleep(0.02)
+-        # ax.scatter(x[ind], y[ind], z[ind], color=color, marker='*')
+-    ax.plot(x, y, '.-', c='red', )
+-    ax.scatter(x[len(x) - 1], y[len(x) - 1], c='blue', marker='*', s=50)
+-    ax.set_title('$f(x_1, x_2) = {x_1}^2 + {x_2}^2 + \cos(x_1 + 3x_2) - x_1 + 2x_2$')
++        # point.set_offsets([x[ind], y[ind]])  # отображение нового положения точки
++        # # перерисовка графика и задержка на 20 мс
++        # fig.canvas.draw()
++        # fig.canvas.flush_events()
++        # time.sleep(0.02)
++    ax.plot(x, y, '--', c="y", linewidth=1)
++    ax.scatter(x[len(x) - 1], y[len(x) - 1], c='green', marker='*', s=50)
+     ax.set_xlabel('$Ox_1$')
+     ax.set_ylabel('$Ox_2$')
+     plt.grid(linestyle='--')  # создадим сетку в виде прерывистой черты
+Index: GradientMethod/main_with_graphs.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>import time\r\nimport matplotlib.pyplot as plt\r\nimport numpy as np\r\nfrom FirstOrderGradient import first_order_gradient_optimal_step, first_order_gradient_const_step\r\n# import grad1\r\nimport SecondOrderGradient as grad2\r\nimport draw as dr\r\nimport task_data as td\r\n\r\n\r\nx_from, x_to = -2.0, 2.0\r\ny_from, y_to = -2.0, 2.0\r\nx_draw_func = np.linspace(x_from, x_to, 300)\r\ny_draw_func = np.linspace(y_from, y_to, 300)\r\nx_start_grad = np.array([-0.25, -0.5])\r\n\r\nx_min_grad1_const, points_grad1_const = first_order_gradient_const_step(0.01, x_start_grad)  # с постоянным шагом\r\nprint(points_grad1_const)\r\nx_min_grad1_opt, points_grad1_opt = first_order_gradient_optimal_step(0.01, x_start_grad)  # с оптимальным шагом\r\nprint(points_grad1_opt)\r\n# Ванька должен свой метод сюда вставить\r\n# x_start_grad_1 = np.array([-0.25, -0.5])\r\n# (x_min_grad_1, points_grad_1) = grad1.calc_min(x_start=x_start_grad_1, grad_eps=0.01)\r\n# x = np.zeros(len(points_grad_1))\r\n# y = np.zeros(len(points_grad_1))\r\n# z = np.zeros(len(points_grad_1))\r\n# for ind in range(len(points_grad_1)):\r\n#     x[ind] = points_grad_1[ind][0]\r\n#     y[ind] = points_grad_1[ind][1]\r\n#     z[ind] = td.calc_func(points_grad_1[ind])\r\n# for ind in range(1, len(points_grad_1)):\r\n#     if z[ind - 1] < z[ind]:\r\n#         print(\"false\")\r\n# dr.add_points_to_ax(dr.ax, x, y, z, 'k', text=True, text_color='k', max_ind=2)\r\n# print(\"Last point: \", points_grad_1[-1])\r\n# print(\"Last gradient norm: \", np.linalg.norm(td.calc_grad(points_grad_1[-1]), ord=2))\r\n# print(\"Points number: \", len(points_grad_1))\r\n\r\n\r\nx_start_grad_2 = np.array([-0.25, -0.5])\r\n(x_min_grad_2, points_grad_2) = grad2.calc_min(x_start=x_start_grad_2,\r\n                                               eps=0.001,\r\n                                               alpha_start=1,\r\n                                               grad_eps=0.01)\r\n\r\nx = np.zeros(len(points_grad_2))\r\ny = np.zeros(len(points_grad_2))\r\nz = np.zeros(len(points_grad_2))\r\nfor ind in range(len(points_grad_2)):\r\n    x[ind] = points_grad_2[ind][0]\r\n    y[ind] = points_grad_2[ind][1]\r\n    z[ind] = td.calc_func(points_grad_2[ind])\r\nfor ind in range(1, len(points_grad_2)):\r\n    if z[ind - 1] < z[ind]:\r\n        print(\"false\")\r\nplt.ion()\r\ndr.add_task_func_to_ax(dr.ax, x=x_draw_func, y=y_draw_func)\r\ndr.add_points_to_ax(dr.ax, x, y, z, text=True, max_ind=len(x))\r\nplt.ioff()\r\n# установим размер графика\r\nfig, ax = plt.subplots(figsize=(5, 5))\r\ndr.level_lines(ax, x, y, x_draw_func, y_draw_func)\r\n\r\nprint(\"Last point: \", points_grad_2[-1])\r\nprint(\"Last gradient norm: \", np.linalg.norm(td.calc_grad(points_grad_2[-1]), ord=2))\r\nprint(\"Points number: \", len(points_grad_2))\r\nprint(\"Решение: \", td.calc_func(points_grad_2[-1]))\r\nplt.show()\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/GradientMethod/main_with_graphs.py b/GradientMethod/main_with_graphs.py
+--- a/GradientMethod/main_with_graphs.py	(revision 4db4ac23abe3453de94c0458e48cf0447818e8d1)
++++ b/GradientMethod/main_with_graphs.py	(date 1681214382822)
+@@ -7,62 +7,138 @@
+ import draw as dr
+ import task_data as td
+ 
+-
+-x_from, x_to = -2.0, 2.0
+-y_from, y_to = -2.0, 2.0
++x_from, x_to = -4.0, 4.0
++y_from, y_to = -4.0, 4.0
+ x_draw_func = np.linspace(x_from, x_to, 300)
+ y_draw_func = np.linspace(y_from, y_to, 300)
+-x_start_grad = np.array([-0.25, -0.5])
+-
+-x_min_grad1_const, points_grad1_const = first_order_gradient_const_step(0.01, x_start_grad)  # с постоянным шагом
+-print(points_grad1_const)
+-x_min_grad1_opt, points_grad1_opt = first_order_gradient_optimal_step(0.01, x_start_grad)  # с оптимальным шагом
+-print(points_grad1_opt)
+-# Ванька должен свой метод сюда вставить
+-# x_start_grad_1 = np.array([-0.25, -0.5])
+-# (x_min_grad_1, points_grad_1) = grad1.calc_min(x_start=x_start_grad_1, grad_eps=0.01)
+-# x = np.zeros(len(points_grad_1))
+-# y = np.zeros(len(points_grad_1))
+-# z = np.zeros(len(points_grad_1))
+-# for ind in range(len(points_grad_1)):
+-#     x[ind] = points_grad_1[ind][0]
+-#     y[ind] = points_grad_1[ind][1]
+-#     z[ind] = td.calc_func(points_grad_1[ind])
+-# for ind in range(1, len(points_grad_1)):
++#
++# x_min_grad1_const, points_grad1_const = first_order_gradient_const_step(eps=0.001,
++#                                                                         x_start=[-0.25, -0.5])  # с постоянным шагом
++# x = np.zeros(len(points_grad1_const))
++# y = np.zeros(len(points_grad1_const))
++# z = np.zeros(len(points_grad1_const))
++# for ind in range(len(points_grad1_const)):
++#     x[ind] = points_grad1_const[ind][0]
++#     y[ind] = points_grad1_const[ind][1]
++#     z[ind] = td.calc_func(points_grad1_const[ind])
++# for ind in range(1, len(points_grad1_const)):
++#     if z[ind - 1] < z[ind]:
++#         print("false")
++# leg = "Метод первого порядка с оптимальным шагом"
++# dr.add_task_func_to_ax(dr.ax1, x=x_draw_func, y=y_draw_func)
++# dr.add_points_to_ax(dr.ax1, x, y, z, dr.fig1, text=False, max_ind=len(x))
++# # установим размер графика
++# fig1, ax1 = plt.subplots(figsize=(5, 5))
++# ax1.set_title('$f(x_1, x_2) = {x_1}^2 + {x_2}^2 + \cos(x_1 + 3x_2) - x_1 + 2x_2$'
++#               '\nМетод первого порядка с постоянным шагом')
++# dr.level_lines(ax1, x, y, z, x_draw_func, y_draw_func, fig1, Text=False)
++#
++# x_min_grad1_opt, points_grad1_opt = first_order_gradient_optimal_step(eps=0.001,
++#                                                                       x_start=[-0.25, -0.5])  # с оптимальным шагом
++#
++# x = np.zeros(len(points_grad1_opt))
++# y = np.zeros(len(points_grad1_opt))
++# z = np.zeros(len(points_grad1_opt))
++# for ind in range(len(points_grad1_opt)):
++#     x[ind] = points_grad1_opt[ind][0]
++#     y[ind] = points_grad1_opt[ind][1]
++#     z[ind] = td.calc_func(points_grad1_opt[ind])
++# for ind in range(1, len(points_grad1_opt)):
++#     if z[ind - 1] < z[ind]:
++#         print("false")
++# leg = "Метод первого порядка с оптимальным шагом"
++# dr.add_task_func_to_ax(dr.ax2, x=x_draw_func, y=y_draw_func)
++# dr.add_points_to_ax(dr.ax2, x, y, z, dr.fig2, text=False, max_ind=len(x))
++# # установим размер графика
++# fig2, ax2 = plt.subplots(figsize=(5, 5))
++# ax2.set_title('$f(x_1, x_2) = {x_1}^2 + {x_2}^2 + \cos(x_1 + 3x_2) - x_1 + 2x_2$'
++#               '\nМетод первого порядка с оптимальным шагом')
++# dr.level_lines(ax2, x, y, z, x_draw_func, y_draw_func, fig2, Text=False)
++#
++# x_start_grad_2 = np.array([-0.25, -0.5])
++# (x_min_grad_2, points_grad_2) = grad2.calc_min(x_start=x_start_grad_2,
++#                                                eps=0.001,
++#                                                alpha_start=1,
++#                                                grad_eps=0.01)
++# x = np.zeros(len(points_grad_2))
++# y = np.zeros(len(points_grad_2))
++# z = np.zeros(len(points_grad_2))
++# for ind in range(len(points_grad_2)):
++#     x[ind] = points_grad_2[ind][0]
++#     y[ind] = points_grad_2[ind][1]
++#     z[ind] = td.calc_func(points_grad_2[ind])
++# for ind in range(1, len(points_grad_2)):
+ #     if z[ind - 1] < z[ind]:
+ #         print("false")
+-# dr.add_points_to_ax(dr.ax, x, y, z, 'k', text=True, text_color='k', max_ind=2)
+-# print("Last point: ", points_grad_1[-1])
+-# print("Last gradient norm: ", np.linalg.norm(td.calc_grad(points_grad_1[-1]), ord=2))
+-# print("Points number: ", len(points_grad_1))
++#
++# dr.add_task_func_to_ax(dr.ax3, x=x_draw_func, y=y_draw_func)
++# dr.add_points_to_ax(dr.ax3, x, y, z, fig=dr.fig3, text=False, max_ind=len(x))
++#
++# # # установим размер графика
++# fig3, ax3 = plt.subplots(figsize=(5, 5))
++# ax3.set_title('$f(x_1, x_2) = {x_1}^2 + {x_2}^2 + \cos(x_1 + 3x_2) - x_1 + 2x_2$'
++#               '\nМетод второго порядка')
++# dr.level_lines(ax3, x, y, z, x_draw_func, y_draw_func, fig3, Text=False)
++#
++# # print("Last point: ", points_grad_2[-1])
++# # print("Last gradient norm: ", np.linalg.norm(td.calc_grad(points_grad_2[-1]), ord=2))
++# # print("Points number: ", len(points_grad_2))
++# # print("Решение: ", td.calc_func(points_grad_2[-1]))
++# plt.show()
++
++print("\nПостоянный шаг")
++x_min_grad1_const1, points_grad1_const = first_order_gradient_const_step(eps=0.1,
++                                                                         x_start=[-0.25, -0.5])  # с постоянным шагом
++print("Точность",
++      0.1, '\tx = {:.1f} и y = {:.1f}\t'.format(points_grad1_const[-1][0], points_grad1_const[-1][1]))
++x_min_grad1_const2, points_grad1_const = first_order_gradient_const_step(eps=0.01,
++                                                                         x_start=[-0.25, -0.5])  # с постоянным шагом
++print("Точность",
++      0.01, '\tx = {:.2f} и y = {:.2f}\t'.format(points_grad1_const[-1][0], points_grad1_const[-1][1]))
+ 
++x_min_grad1_const3, points_grad1_const = first_order_gradient_const_step(eps=0.001,
++                                                                         x_start=[-0.25, -0.5])  # с постоянным шагом
++print("Точность",
++      0.001, '\tx = {:.3f} и y = {:.3f}\t'.format(points_grad1_const[-1][0], points_grad1_const[-1][1]))
+ 
++x_min_grad1_const3, points_grad1_const = first_order_gradient_const_step(eps=0.0001,
++                                                                         x_start=[-0.25, -0.5])  # с постоянным шагом
++print("Точность",
++      0.0001, '\tx = {:.4f} и y = {:.4f}\t'.format(points_grad1_const[-1][0], points_grad1_const[-1][1]))
++
++print("\nОптимальный шаг")
++x_min_grad1_opt1, points_grad1_opt = first_order_gradient_optimal_step(eps=0.1,
++                                                                       x_start=[-0.25, -0.5])  # с оптимальным шагом
++print('\nx = {:.1f} y = {:.1f}\t'.format(points_grad1_opt[-1][0], points_grad1_opt[-1][1]), "Точность",
++      0.1)
++x_min_grad1_opt2, points_grad1_opt = first_order_gradient_optimal_step(eps=0.01,
++                                                                       x_start=[-0.25, -0.5])  # с оптимальным шагом
++print('\nx = {:.2f} y = {:.2f}\t'.format(points_grad1_opt[-1][0], points_grad1_opt[-1][1]), "Точность",
++      0.01)
++x_min_grad1_opt3, points_grad1_opt = first_order_gradient_optimal_step(eps=0.001,
++                                                                       x_start=[-0.25, -0.5])  # с оптимальным шагом
++print('\nx = {:.3f} y = {:.3f}\t'.format(points_grad1_opt[-1][0], points_grad1_opt[-1][1]), "Точность",
++      0.001)
++
++
++
++print("\nМетод Ньютона")
+ x_start_grad_2 = np.array([-0.25, -0.5])
+-(x_min_grad_2, points_grad_2) = grad2.calc_min(x_start=x_start_grad_2,
+-                                               eps=0.001,
+-                                               alpha_start=1,
+-                                               grad_eps=0.01)
+-
+-x = np.zeros(len(points_grad_2))
+-y = np.zeros(len(points_grad_2))
+-z = np.zeros(len(points_grad_2))
+-for ind in range(len(points_grad_2)):
+-    x[ind] = points_grad_2[ind][0]
+-    y[ind] = points_grad_2[ind][1]
+-    z[ind] = td.calc_func(points_grad_2[ind])
+-for ind in range(1, len(points_grad_2)):
+-    if z[ind - 1] < z[ind]:
+-        print("false")
+-plt.ion()
+-dr.add_task_func_to_ax(dr.ax, x=x_draw_func, y=y_draw_func)
+-dr.add_points_to_ax(dr.ax, x, y, z, text=True, max_ind=len(x))
+-plt.ioff()
+-# установим размер графика
+-fig, ax = plt.subplots(figsize=(5, 5))
+-dr.level_lines(ax, x, y, x_draw_func, y_draw_func)
+-
+-print("Last point: ", points_grad_2[-1])
+-print("Last gradient norm: ", np.linalg.norm(td.calc_grad(points_grad_2[-1]), ord=2))
+-print("Points number: ", len(points_grad_2))
+-print("Решение: ", td.calc_func(points_grad_2[-1]))
+-plt.show()
++(x_min_grad_21, points_grad_2) = grad2.calc_min(x_start=x_start_grad_2,
++                                                eps=0.001,
++                                                alpha_start=1,
++                                                grad_eps=0.1)
++print('\nx = {:.1f} y = {:.1f}\t'.format(points_grad_2[-1][0], points_grad_2[-1][1]), "Точность",
++      0.1)
++(x_min_grad_22, points_grad_2) = grad2.calc_min(x_start=x_start_grad_2,
++                                                eps=0.001,
++                                                alpha_start=1,
++                                                grad_eps=0.01)
++print('\nx = {:.2f} y = {:.2f}\t'.format(points_grad_2[-1][0], points_grad_2[-1][1]), "Точность",
++      0.01)
++(x_min_grad_23, points_grad_2) = grad2.calc_min(x_start=x_start_grad_2,
++                                                eps=0.001,
++                                                alpha_start=1,
++                                                grad_eps=0.001)
++print('\nx = {:.3f} y = {:.3f}\t'.format(points_grad_2[-1][0], points_grad_2[-1][1]), "Точность",
++      0.001)
+Index: GradientMethod/SecondOrderGradient.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>import task_data as td\r\nimport numpy as np\r\nimport UniformMethod as uni\r\n\r\n\r\ndef calc_min(x_start, alpha_start, eps, grad_eps):\r\n    x = x_start\r\n    points = [x]\r\n    grad = td.calc_grad(x)\r\n    alpha = alpha_start\r\n    iter_iternal = 0\r\n    print('alpha(начальный шаг):', alpha)\r\n    print('x(начальная точка):', x_start)\r\n    while (np.linalg.norm(grad, ord=2)) >= grad_eps:\r\n        hessian = td.calc_hessian(x)\r\n        inv_hessian = np.linalg.inv(hessian)\r\n        d = -np.dot(inv_hessian, grad)\r\n        # print('d(направление):', d)\r\n        alpha = uni.calc_gmp_uniform(0, 1, 5, eps, lambda a: td.calc_func([x[0] + a * d[0], x[1] + a * d[1]]))[0]\r\n        # print('alpha(шаг):', alpha)\r\n        x = x + alpha * d\r\n        grad = td.calc_grad(x)\r\n        points.append(x)\r\n        # print('x(новое приближение):', x)\r\n    return x, points\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/GradientMethod/SecondOrderGradient.py b/GradientMethod/SecondOrderGradient.py
+--- a/GradientMethod/SecondOrderGradient.py	(revision 4db4ac23abe3453de94c0458e48cf0447818e8d1)
++++ b/GradientMethod/SecondOrderGradient.py	(date 1681212327163)
+@@ -9,8 +9,8 @@
+     grad = td.calc_grad(x)
+     alpha = alpha_start
+     iter_iternal = 0
+-    print('alpha(начальный шаг):', alpha)
+-    print('x(начальная точка):', x_start)
++    # print('alpha(начальный шаг):', alpha)
++    # print('x(начальная точка):', x_start)
+     while (np.linalg.norm(grad, ord=2)) >= grad_eps:
+         hessian = td.calc_hessian(x)
+         inv_hessian = np.linalg.inv(hessian)
+diff --git a/GradientMethod/table1.py b/GradientMethod/table1.py
+new file mode 100644

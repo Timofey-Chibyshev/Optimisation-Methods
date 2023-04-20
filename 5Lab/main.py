@@ -34,19 +34,19 @@ min_max2 = 'min'
 x_start = np.array([0.45, -0.5])
 
 
-c1 = td.calc_grad(x_start)
+def conditional_gradient(x_start, A, b, A_signs, min_max, x_signs):
+    x_k = x_start
+    alpha_k = 1
+    limb = 0.5  # коэффициент дробления
+    # while 1:
+    c = np.append(td.calc_grad(x_k), 0)
+    # s_k
+    M1, M2, N1, N2, min_max_new = manager(c, A, b, A_signs, min_max, x_signs)
+    c_canon, A_canon, b_canon, A_signs_canon, x_signs_canon = common_to_canonical(c, A, b1, M1, M2, N1, N2, A_signs)
+    y_k = sm.calc_global_minimum_point(c_canon, A_canon, b_canon)[:2]
+    s_k = y_k - x_k
+    # η
+    n_k = td.calc_grad(x_k) * s_k
+    print(n_k)
 
-c1 = np.append(c1, 0)
-
-M1, M2, N1, N2, min_max_new = manager(c1, A1, b1, A_signs1, min_max1, x_signs1)
-
-c_canon, A_canon, b_canon, A_signs_canon, x_signs_canon = common_to_canonical(c1, A1, b1, M1, M2, N1, N2, A_signs1)
-
-try:
-    y_k = sm.calc_global_minimum_point(c_canon, A_canon, b_canon)
-    print('\n', y_k)
-except sm.SimplexException as ex:
-    print(ex.err_msg)
-
-s_k = y_k[:2] - x_start
-print(s_k)
+conditional_gradient(x_start, A1, b1, A_signs1, min_max1, x_signs1)

@@ -6,10 +6,11 @@ from matplotlib import cm
 
 fig = plt.figure()
 ax = fig.add_subplot(projection='3d')
-ax.set_title('$f(x_1, x_2) = {x_1}^2 + {x_2}^2 + \cos(x_1 + 3x_2) - x_1 + x_2$')
+ax.set_title('$f(x_1, x_2) = {x_1}^2 + {x_2}^2 + \cos(x_1 + 3x_2) - x_1 + 2*x_2$')
 ax.set_xlabel('$Ox_1$')
 ax.set_ylabel('$Ox_2$')
 ax.set_zlabel('$Ox_3$')
+
 
 def func_3d(ax, x, y):
     x_grid, y_grid = np.meshgrid(x, y)
@@ -22,6 +23,7 @@ def func_3d(ax, x, y):
     ax.contour(x_grid, y_grid, z_grid, zdir='z', offset=-2, cmap='coolwarm')
     ax.contour(x_grid, y_grid, z_grid, zdir='x', offset=-2, cmap='coolwarm')
     ax.contour(x_grid, y_grid, z_grid, zdir='y', offset=2, cmap='coolwarm')
+
 
 x_from, x_to = -2.0, 2.0
 y_from, y_to = -2.0, 2.0

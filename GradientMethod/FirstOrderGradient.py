@@ -13,9 +13,9 @@ def norm(x):
     return (x[0] ** 2 + x[1] ** 2) ** 0.5
 
 
-def first_order_gradient_const_step(eps, x0):
-    grad = grad_f(x0)
-    x = x0
+def first_order_gradient_const_step(eps, x_start):
+    grad = grad_f(x_start)
+    x = x_start
     step = 2 / (2 + 12)  # 2 / (M + m)
     points = [x[:]]
     while norm(grad) > eps:
@@ -23,13 +23,13 @@ def first_order_gradient_const_step(eps, x0):
         x[1] = x[1] - step * grad[1]
         grad = grad_f(x)
         points.append(x[:])
-    #    print(len(points))
+    # print(points)
     return x, points
 
 
-def first_order_gradient_optimal_step(eps, x0):
-    grad = grad_f(x0)
-    x = x0
+def first_order_gradient_optimal_step(eps, x_start):
+    grad = grad_f(x_start)
+    x = x_start
     points = [x[:]]
     while norm(grad) > eps:
         step = fibonacci(0, 1, 0.01, f, x, grad)

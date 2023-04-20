@@ -5,9 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c7a2392f-bbaf-47e2-9c05-50cf340126f4" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/GradientMethod/table1.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/5Lab/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/5Lab/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GradientMethod/3d_projections.py" beforeDir="false" afterPath="$PROJECT_DIR$/GradientMethod/3d_projections.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/GradientMethod/FirstOrderGradient.py" beforeDir="false" afterPath="$PROJECT_DIR$/GradientMethod/FirstOrderGradient.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GradientMethod/SecondOrderGradient.py" beforeDir="false" afterPath="$PROJECT_DIR$/GradientMethod/SecondOrderGradient.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/GradientMethod/draw.py" beforeDir="false" afterPath="$PROJECT_DIR$/GradientMethod/draw.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/GradientMethod/main_with_graphs.py" beforeDir="false" afterPath="$PROJECT_DIR$/GradientMethod/main_with_graphs.py" afterDir="false" />
     </list>
@@ -15,6 +18,13 @@
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Python Script" />
+      </list>
+    </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -31,7 +41,7 @@
   &quot;keyToString&quot;: {
     &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/vanek/Documents/GitHub/Optimisation-Methods1&quot;
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/Zirael/Desktop/Optimisation-Methods&quot;
   }
 }</component>
   <component name="RecentsManager">
@@ -85,7 +95,7 @@
                   <entry key="branch">
                     <value>
                       <list>
-                        <option value="main" />
+                        <option value="origin/main" />
                       </list>
                     </value>
                   </entry>

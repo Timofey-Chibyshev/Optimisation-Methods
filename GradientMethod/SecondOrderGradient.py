@@ -9,8 +9,8 @@ def calc_min(x_start, alpha_start, eps, grad_eps):
     grad = td.calc_grad(x)
     alpha = alpha_start
     iter_iternal = 0
-    print('alpha(начальный шаг):', alpha)
-    print('x(начальная точка):', x_start)
+    # print('alpha(начальный шаг):', alpha)
+    # print('x(начальная точка):', x_start)
     while (np.linalg.norm(grad, ord=2)) >= grad_eps:
         hessian = td.calc_hessian(x)
         inv_hessian = np.linalg.inv(hessian)
