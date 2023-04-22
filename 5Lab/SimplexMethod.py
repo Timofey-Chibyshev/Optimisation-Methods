@@ -13,16 +13,16 @@ def calc_global_minimum_point(c, A, b):
             raise SimplexException("'c' is a zero vector.")
         if A.shape[0] > A.shape[1]:  # This check should  be located before the check is rank A == m
             raise SimplexException("Error: 'm' > 'n'.")
-        print('\n', np.linalg.matrix_rank(A), '\n')
+        # print('\n', np.linalg.matrix_rank(A), '\n')
         if np.linalg.matrix_rank(A) != A.shape[0]:
             raise SimplexException("'A' is a degenerate matrix.")
 
         x1, N1, BN1 = artifical_basis_method(A, b)
-        print("After abm:", x1)
+        # print("After abm:", x1)
         sumMa = 0
         for i in range(len(x1)):
             sumMa += x1[i] * c[i]
-        print(sumMa)
+        # print(sumMa)
         gmp, N_gmp, B_gmp = simplex_method(c, A, b, x1, N1, BN1)  # "gmp" means "global minimum point"
         return gmp
     except SimplexException as ex:
@@ -61,7 +61,7 @@ def artifical_basis_method(A, b):
         if b[i] < 0:
             for j in range(m):
                 BN1[j, i] = -BN1[j, i]
-    print('Counter of change_basis_in_abm:', counter, '\n')
+    # print('Counter of change_basis_in_abm:', counter, '\n')
     return x1, N1, BN1
 
 
@@ -129,13 +129,13 @@ def simplex_method(c, A, b, x1, N1, BN1):
     counterPoints = 0
 
     while True:
-        print('Counter of change_basis_in_Simplex:', counterBasis, '\n')
-        print('Counter of extreme points:', counterPoints, '\n')
+        # print('Counter of change_basis_in_Simplex:', counterBasis, '\n')
+        # print('Counter of extreme points:', counterPoints, '\n')
         dk = calc_dk(c, BNk, A, Nk)
-        print(xk)
+        # print(xk)
         if is_xk_global_minimum_point(dk):
-            print('Counter of change_basis_in_Simplex:', counterBasis, '\n')
-            print('Counter of extreme points:', counterPoints, '\n')
+            # print('Counter of change_basis_in_Simplex:', counterBasis, '\n')
+            # print('Counter of extreme points:', counterPoints, '\n')
             return xk, Nk, BNk
         jk = calc_jk(dk)
         uk = calc_uk(jk, Nk, BNk, A)
