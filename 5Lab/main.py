@@ -25,19 +25,24 @@ x - y <= 3
 10x + 0.1y >= 1
 '''
 
-A2 = [[1, 1], [1, -1], [10, 0.1]]
-b2 = [4, 3, 1]
+# A2 = [[1, 1], [1, -1], [10, 0.1]]
+# b2 = [0.5, 3, 1]
+# A_signs2 = ['<=', '<=', '>=']
+# x_signs2 = [0]
+# min_max2 = 'min'
+A2 = [[-7, 1], [1, -4], [-14, -8]]
+b2 = [3, 20, 5]
 A_signs2 = ['<=', '<=', '>=']
-x_signs2 = [0, 1]
+x_signs2 = []
 min_max2 = 'min'
 
 # start point
-x_start = np.array([0.5, -1.45])
+x_start = np.array([0.5, -1.5])
 
 
 def canon_to_general(z, N1, N2):
     x1 = z[:len(N1)]
-    x2 = z[len(N1) + 1:len(N1) + len(N2)] - z[len(N1) + len(N2) + 1:len(N1) + len(N2) + len(N2)]
+    x2 = z[len(N1):len(N1) + len(N2) - 1] - z[len(N1) + len(N2):len(N1) + len(N2) + len(N2)]
     x = np.concatenate((x1, x2))
     return x
 
@@ -49,29 +54,29 @@ def lp_min(x_k, A, b, A_signs, min_max, x_signs):
     c_canon, A_canon, b_canon, A_signs_canon, x_signs_canon = common_to_canonical(c, A, b, M1, M2, N1, N2, A_signs)
     # printing(c_canon, A_canon, b_canon, A_signs_canon, min_max_new, x_signs_canon)
     z = sm.calc_global_minimum_point(c_canon, A_canon, b_canon)
+    # print('z', z)
     x = canon_to_general(z, N1, N2)
     return x
 
 
-def conditional_gradient(x_start, A, b, A_signs, min_max, x_signs):
+def conditional_gradient(x_start, A, b, A_signs, min_max, x_signs, eps):
     x_k = x_start
-    a_0 = 1
+    a_0 = 1/14
     limb = 0.5  # коэффициент дробления
-    eps = 10 ** (-1)
     iters = 0
     while np.linalg.norm(td.calc_grad(x_k), ord=2) >= eps:
         # grad = td.calc_grad(x_k)
         # print('grad(x_k1):', grad)
         # print('||grad(x_k1)||:', np.linalg.norm(grad, ord=2))
         # simplex
-        y_k = np.array(lp_min(x_k, A, b, A_signs, min_max, x_signs))
+        y_k = lp_min(x_k, A, b, A_signs, min_max, x_signs)
         # A11 = np.array([[1, 1], [1, -1], [-10, -0.1], [0, -1]])
         # b11 = np.array([0.5, 3, -1, 0])
         # res = linprog(-td.calc_grad(x_k), A_ub=A11, b_ub=b11, bounds=(0, None))
         # y_k = res.x
 
         # direction
-        s_k = np.array(y_k - x_k)
+        s_k = y_k - x_k
         # eta
         n_k = np.dot(td.calc_grad(x_k), s_k)
         a_k = a_0
@@ -79,6 +84,7 @@ def conditional_gradient(x_start, A, b, A_signs, min_max, x_signs):
             a_k = a_k * limb
         x_k = x_k + a_k * s_k
         iters += 1
+        # print(np.linalg.norm(td.calc_grad(x_k), ord=2))
         # print('y_k:', y_k)
         # print('x_k:', x_k)
         # print('n_k:', n_k)
@@ -87,7 +93,10 @@ def conditional_gradient(x_start, A, b, A_signs, min_max, x_signs):
     print('min_iters:', iters)
 
 
-conditional_gradient(x_start, A2, b2, A_signs2, min_max2, x_signs2)
+if __name__ == '__main__':
+    for i in range(7):
+        conditional_gradient(x_start, A2, b2, A_signs2, min_max2, x_signs2, 10**(-i-1))
+    # conditional_gradient(x_start, A2, b2, A_signs2, min_max2, x_signs2, 10 ** (-4))
 
 # x + y <= 0.5
 # x - y <= 3

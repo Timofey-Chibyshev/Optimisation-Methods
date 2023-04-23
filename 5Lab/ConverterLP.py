@@ -26,7 +26,7 @@ def manager(c, A, b, A_signs, min_max, x_signs):
             M1.append(i)
         if A_signs[i] == '=':
             M2.append(i)
-    for i in range(len(x_signs)):
+    for i in range(len(c) - 1):
         if i in x_signs:
             N1.append(i)
         else:
