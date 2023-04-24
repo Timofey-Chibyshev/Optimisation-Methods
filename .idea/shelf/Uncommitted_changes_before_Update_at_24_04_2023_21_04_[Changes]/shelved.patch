@@ -1,0 +1,68 @@
+Index: 5Lab/main.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>from ConverterLP import *\r\nimport SimplexMethod as sm\r\nimport numpy as np\r\nimport task_data as td\r\nfrom scipy.optimize import linprog\r\n\r\n# linear constraints\r\n# first\r\n'''\r\nx + y <= 0.5\r\nx - y <= 3\r\n4.84x + y >= 1\r\n'''\r\n\r\nA1 = [[1, 1], [1, -1], [4.84, 1]]\r\nb1 = [0.5, 3, 1]\r\nA_signs1 = ['<=', '<=', '>=']\r\nx_signs1 = [0, 1]\r\nmin_max1 = 'min'\r\n\r\n# second\r\n'''\r\nx + y <= 0.5\r\nx - y <= 3\r\n10x + 0.1y >= 1\r\n'''\r\n\r\nA2 = [[1, 1], [1, -1], [10, 0.1]]\r\nb2 = [4, 3, 1]\r\nA_signs2 = ['<=', '<=', '>=']\r\nx_signs2 = [0, 1]\r\nmin_max2 = 'min'\r\n\r\n# start point\r\nx_start = np.array([0.5, -1.45])\r\n\r\n\r\ndef canon_to_general(z, N1, N2):\r\n    x1 = z[:len(N1)]\r\n    x2 = z[len(N1) + 1:len(N1) + len(N2)] - z[len(N1) + len(N2) + 1:len(N1) + len(N2) + len(N2)]\r\n    x = np.concatenate((x1, x2))\r\n    return x\r\n\r\n\r\ndef lp_min(x_k, A, b, A_signs, min_max, x_signs):\r\n    c = np.append(td.calc_grad(x_k), 0)\r\n    # print(c)\r\n    M1, M2, N1, N2, min_max_new = manager(c, A, b, A_signs, min_max, x_signs)\r\n    c_canon, A_canon, b_canon, A_signs_canon, x_signs_canon = common_to_canonical(c, A, b, M1, M2, N1, N2, A_signs)\r\n    # printing(c_canon, A_canon, b_canon, A_signs_canon, min_max_new, x_signs_canon)\r\n    z = sm.calc_global_minimum_point(c_canon, A_canon, b_canon)\r\n    x = canon_to_general(z, N1, N2)\r\n    return x\r\n\r\n\r\ndef conditional_gradient(x_start, A, b, A_signs, min_max, x_signs):\r\n    x_k = x_start\r\n    a_0 = 1\r\n    limb = 0.5  # коэффициент дробления\r\n    eps = 10 ** (-1)\r\n    iters = 0\r\n    while np.linalg.norm(td.calc_grad(x_k), ord=2) >= eps:\r\n        # grad = td.calc_grad(x_k)\r\n        # print('grad(x_k1):', grad)\r\n        # print('||grad(x_k1)||:', np.linalg.norm(grad, ord=2))\r\n        # simplex\r\n        y_k = np.array(lp_min(x_k, A, b, A_signs, min_max, x_signs))\r\n        # A11 = np.array([[1, 1], [1, -1], [-10, -0.1], [0, -1]])\r\n        # b11 = np.array([0.5, 3, -1, 0])\r\n        # res = linprog(-td.calc_grad(x_k), A_ub=A11, b_ub=b11, bounds=(0, None))\r\n        # y_k = res.x\r\n\r\n        # direction\r\n        s_k = np.array(y_k - x_k)\r\n        # eta\r\n        n_k = np.dot(td.calc_grad(x_k), s_k)\r\n        a_k = a_0\r\n        while (td.calc_func(x_k + a_k * s_k) - td.calc_func(x_k)) >= 0.5 * a_k * n_k:\r\n            a_k = a_k * limb\r\n        x_k = x_k + a_k * s_k\r\n        iters += 1\r\n        # print('y_k:', y_k)\r\n        # print('x_k:', x_k)\r\n        # print('n_k:', n_k)\r\n        # print('alpha_k:', a_k)\r\n    print('min:', x_k)\r\n    print('min_iters:', iters)\r\n\r\n\r\nconditional_gradient(x_start, A2, b2, A_signs2, min_max2, x_signs2)\r\n\r\n# x + y <= 0.5\r\n# x - y <= 3\r\n# 10x + 0.1y >= 1\r\n\r\n# -x + -y => -0.5\r\n# -x + y => -3\r\n# 10x + 0.1y => 1\r\n\r\n# Minimize          w = 10*y1 + 15*y2 + 25*y3\r\n# Subject to:       y1 + y2 + y3 >= 1000\r\n#                   y1 - 2*y2    >= 0\r\n#                             y3 >= 340\r\n# with              y1 >= 0, y2 >= 0\r\n\r\n# A = np.array([[-1, -1, -1], [-1, 2, 0], [0, 0, -1], [-1, 0, 0], [0, -1, 0]])\r\n# b = np.array([-1000, 0, -340, 0, 0])\r\n# c = np.array([10, 15, 25])\r\n#\r\n#\r\n# res = linprog(x_start, A_ub=A11, b_ub=b11, bounds=(0, None))\r\n#\r\n# print('Optimal value:', res.fun, '\\nX:', res.x)\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/5Lab/main.py b/5Lab/main.py
+--- a/5Lab/main.py	
++++ b/5Lab/main.py	
+@@ -53,6 +53,15 @@
+     return x
+ 
+ 
++def f(x: np.array) -> float:
++    return 3 * x[0] ** 2 + x[1] ** 2 - x[0] + 2 * x[1] + np.cos(4 * x[0] + 2 * x[1])
++
++
++def grad(x: np.array) -> np.array:
++    return np.array(
++        [6.0 * x[0] - 1.0 - 4 * np.sin(4 * x[0] + 2 * x[1]), 2.0 * x[1] + 2.0 - 2 * np.sin(4 * x[0] + 2 * x[1])])
++
++
+ def conditional_gradient(x_start, A, b, A_signs, min_max, x_signs):
+     x_k = x_start
+     a_0 = 1
+@@ -64,11 +73,11 @@
+         # print('grad(x_k1):', grad)
+         # print('||grad(x_k1)||:', np.linalg.norm(grad, ord=2))
+         # simplex
+-        y_k = np.array(lp_min(x_k, A, b, A_signs, min_max, x_signs))
+-        # A11 = np.array([[1, 1], [1, -1], [-10, -0.1], [0, -1]])
+-        # b11 = np.array([0.5, 3, -1, 0])
+-        # res = linprog(-td.calc_grad(x_k), A_ub=A11, b_ub=b11, bounds=(0, None))
+-        # y_k = res.x
++        # y_k = np.array(lp_min(x_k, A, b, A_signs, min_max, x_signs))
++        A11 = np.array([[1, 1], [1, -1], [-10, -0.1], [0, -1]])
++        b11 = np.array([0.5, 3, -1, 0])
++        res = linprog(-td.calc_grad(x_k), A_ub=A11, b_ub=b11, bounds=(0, None))
++        y_k = res.x
+ 
+         # direction
+         s_k = np.array(y_k - x_k)
+@@ -106,8 +115,22 @@
+ # A = np.array([[-1, -1, -1], [-1, 2, 0], [0, 0, -1], [-1, 0, 0], [0, -1, 0]])
+ # b = np.array([-1000, 0, -340, 0, 0])
+ # c = np.array([10, 15, 25])
+-#
+-#
++
++
++# -x + -y => -0.5
++# -x + y => -3
++# 10x + 0.1y => 1
++# x => 0
++A11 = np.array([[1, 1], [1, -1], [-10, -0.1], [0, -1]])
++b11 = np.array([0.5, 3, -1, 0])
++
++
++# 7x - y >= -3
++# -x + 4y >= -20
++# -14x - 8y >= 5
++A12 = np.array([[-7, 1], [1, -4], [14, 8]])
++b12 = np.array([3, 20, -5])
+ # res = linprog(x_start, A_ub=A11, b_ub=b11, bounds=(0, None))
+ #
+ # print('Optimal value:', res.fun, '\nX:', res.x)
++
