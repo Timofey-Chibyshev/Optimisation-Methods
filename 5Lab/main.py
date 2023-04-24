@@ -65,8 +65,9 @@ def conditional_gradient(x_start, A, b, A_signs, min_max, x_signs, eps):
         # print('||grad(x_k1)||:', np.linalg.norm(grad, ord=2))
         # simplex
         y_k = lp_min(x_k, A, b, A_signs, min_max, x_signs)
-        print('y_k:', y_k)
-        print('grad:', td.calc_grad(x_k))
+        if iters == 13:
+            print('y_k:', y_k)
+            print('grad:', td.calc_grad(x_k))
         # direction
         s_k = y_k - x_k
         # eta
