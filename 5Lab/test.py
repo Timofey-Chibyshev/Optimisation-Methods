@@ -8,12 +8,12 @@ from scipy.optimize import linprog as Svoy_Mega_Super_CHESTNO_SVOY_SIMPLEX
 # first
 '''
 x + y <= 0.5
-x - y <= 3
-4.84x + y >= 1
+x - y <= 1.61
+4.84x + y >= -8
 '''
 
 A1 = [[1, 1], [1, -1], [4.84, 1]]
-b1 = [0.5, 1.61, -8]
+b1 = [0.5, 1.61, -10]
 A_signs1 = ['<=', '<=', '>=']
 x_signs1 = []
 min_max1 = 'min'
@@ -22,7 +22,7 @@ min_max1 = 'min'
 '''
 x + y <= 0.5
 x - y <= 3
-10x + 0.1y >= -1
+10x + 0.1y >= -8
 '''
 
 A2 = [[1, 1], [1, -1], [10, 0.1]]
@@ -36,8 +36,10 @@ min_max2 = 'min'
 # x_signs2 = []
 # min_max2 = 'min'
 
-# start point
-x_start = np.array([0.5, -1.5])
+# start point for internal point
+x_start_int = np.array([0.5, -1.5])
+# start point for boundary point
+x_start_bnd = np.array([0.5, -1.15])
 
 
 def conditional_gradient(x_start, A, b, A_signs, min_max, x_signs, eps):
@@ -50,16 +52,18 @@ def conditional_gradient(x_start, A, b, A_signs, min_max, x_signs, eps):
         # print('grad(x_k1):', grad)
         # print('||grad(x_k1)||:', np.linalg.norm(grad, ord=2))
         # simplex
-        A11 = np.array([[1, 1], [1, -1], [-10, -0.1]])
-        b11 = np.array([0.5, 3, 8])
-        # A11 = np.array([[1, 1], [1, -1], [-4.84, -1]])
-        # b11 = np.array([0.5, 1.61, 8])
         x0_bounds = (None, None)
         x1_bounds = (None, None)
-        res = Svoy_Mega_Super_CHESTNO_SVOY_SIMPLEX(td.calc_grad(x_k), A_ub=A11, b_ub=b11, bounds=[x0_bounds, x1_bounds])
+        res = Svoy_Mega_Super_CHESTNO_SVOY_SIMPLEX(td.calc_grad(x_k), A_ub=A, b_ub=b, bounds=[x0_bounds, x1_bounds])
         y_k = res.x
-        print('y_k:', y_k)
-        print('grad:', td.calc_grad(x_k))
+        # print('y_k:', y_k)
+        # print('grad:', td.calc_grad(x_k))
+        # if (iters == 14) and (eps == 10**(-4)):
+        #     print('y_k:', y_k)
+        #     print('grad:', td.calc_grad(x_k))
+        #     test = Svoy_Mega_Super_CHESTNO_SVOY_SIMPLEX(td.calc_grad(x_k), A_ub=A11, b_ub=b11, bounds=[x0_bounds, x1_bounds])
+        #     print(test.x)
+        #     print(np.dot(y_k, td.calc_grad(x_k)))
         # direction
         s_k = y_k - x_k
         # eta
@@ -79,7 +83,16 @@ def conditional_gradient(x_start, A, b, A_signs, min_max, x_signs, eps):
 
 
 if __name__ == '__main__':
+    A_int = np.array([[1, 1], [1, -1], [-10, -0.1]])
+    b_int = np.array([0.5, 3, 8])
+    A_bnd = np.array([[1, 1], [1, -1], [-10, -0.1]])
+    b_bnd = np.array([0.5, 1.61, 8])
+    print(10*'=', "INTERNAL POINT", 10*'=')
     for i in range(7):
-        conditional_gradient(x_start, A2, b2, A_signs2, min_max2, x_signs2, 10**(-i-1))
+        conditional_gradient(x_start_int, A_int, b_int, A_signs2, min_max2, x_signs2, 10**(-i-1))
+    print(20 * '=')
+    print(10 * '=', "INTERNAL POINT", 10 * '=')
+    for i in range(7):
+        conditional_gradient(x_start_bnd, A_bnd, b_bnd, A_signs2, min_max2, x_signs2, 10 ** (-i - 1))
     # conditional_gradient(x_start, A2, b2, A_signs2, min_max2, x_signs2, 10 ** (-4))
-
+    print(20 * '=')
