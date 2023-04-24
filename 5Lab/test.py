@@ -66,12 +66,12 @@ def conditional_gradient(x_start, A, b, c, eps):
         a_k = a_0
         while not ((td.calc_func(x_k + a_k * s_k) - td.calc_func(x_k)) <= 0.5 * a_k * n_k):
             a_k = a_k * limb
-        k = -((0.5 * n_k) / (R * c))
+        k = -((0.5 * n_k) / (R * np.linalg.norm(s_k, ord=2)**2))
         print(limb * k)
         print(a_k)
         print(k)
         print("\n")
-        if not (limb * k <= a_k <= k):
+        if not(limb * k <= a_k <= k):
             print("Условие не выполнено")
         x_k = x_k + a_k * s_k
         iters += 1
