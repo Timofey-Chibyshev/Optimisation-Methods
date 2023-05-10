@@ -39,7 +39,7 @@ min_max2 = 'min'
 # start point for internal point
 x_start_int = np.array([0.5, -1.5])
 # start point for boundary point
-x_start_bnd = np.array([0.5, -1.15])
+x_start_bnd = np.array([0.5, -1.26])
 
 
 def conditional_gradient(x_start, A, b, A_signs, min_max, x_signs, eps):
@@ -89,10 +89,12 @@ if __name__ == '__main__':
     b_bnd = np.array([0.5, 1.61, 8])
     print(10*'=', "INTERNAL POINT", 10*'=')
     for i in range(7):
+        print(i + 1, ')', 'точность', 10**(-i-1))
         conditional_gradient(x_start_int, A_int, b_int, A_signs2, min_max2, x_signs2, 10**(-i-1))
-    print(20 * '=')
+    print(36 * '=')
     print(10 * '=', "INTERNAL POINT", 10 * '=')
     for i in range(7):
+        print(i + 1, ')', 'точность', 10 ** (-i - 1))
         conditional_gradient(x_start_bnd, A_bnd, b_bnd, A_signs2, min_max2, x_signs2, 10 ** (-i - 1))
     # conditional_gradient(x_start, A2, b2, A_signs2, min_max2, x_signs2, 10 ** (-4))
-    print(20 * '=')
+    print(36 * '=')
